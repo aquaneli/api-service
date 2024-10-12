@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"reflect"
 
 	"github.com/labstack/echo"
 )
@@ -44,45 +45,44 @@ func PostHandler(e echo.Context) error {
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, "{\n\"status_err\": 400\n}")
 	}
-	items = append(items, *item)
+	items = append(items, item)
 	return e.JSON(http.StatusInternalServerError, "{\n\"status_ok\": 200\n}")
 }
 
-func Parsing(e echo.Context) (*Items, error) {
+func Parsing(e echo.Context) (Items, error) {
 	decoder := json.NewDecoder(e.Request().Body)
 	decoder.Token()
 	item := Items{}
 	for decoder.More() {
 		key, err := decoder.Token()
 		if err != nil {
-			return nil, err
+			return Items{}, err
 		}
 		value, err := decoder.Token()
 		if err != nil {
-			return nil, err
+			return Items{}, err
 		}
 
 		switch key {
 		case "caption":
-			val, ok := value.(string)
-			if !ok {
-				return nil, err
-			}
-			item.caption = val
+			val := reflect.ValueOf(value)
+			item.caption = val.String()
 		case "weight":
-			val, ok := value.(float32)
+			val := reflect.ValueOf(value)
+			ok := val.CanFloat()
 			if !ok {
-				return nil, err
+				return Items{}, err
 			}
-			item.weight = val
+			item.weight = float32(val.Float())
 		case "number":
-			val, ok := value.(int)
+			val := reflect.ValueOf(value)
+			ok := val.CanInt()
 			if !ok {
-				return nil, err
+				return Items{}, err
 			}
-			item.number = val
+			item.number = int(val.Int())
 		}
 
 	}
-	return &item, nil
+	return item, nil
 }
