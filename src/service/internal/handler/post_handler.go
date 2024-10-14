@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"service/internal/model"
 
@@ -51,6 +52,8 @@ func Parsing(e echo.Context) (model.Items, error) {
 			if err != nil {
 				return model.Items{}, err
 			}
+		default:
+			return model.Items{}, errors.New("incorrect data")
 		}
 	}
 
