@@ -52,7 +52,6 @@ func Parsing(e echo.Context) (model.Items, error) {
 				return model.Items{}, err
 			}
 		}
-
 	}
 
 	return item, nil
