@@ -18,10 +18,15 @@ func main() {
 		count := 0
 		fmt.Scanf("%d", &count)
 		err := api.PostApiRequest(count)
-		log.Fatal(err)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 	}
 	if code == 2 {
 		err := api.GetApiRequest()
-		log.Fatal(err)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }

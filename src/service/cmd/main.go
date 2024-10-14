@@ -8,7 +8,7 @@ import (
 
 func main() {
 	e := echo.New()
-	e.GET("api/:caption", handler.GetHandler)
-	e.POST("api", handler.PostHandler)
+	e.GET("item/:caption", handler.GetHandler)
+	e.POST("item", handler.PostHandler)
 	e.Logger.Fatal(e.Start(":8080"))
 }
